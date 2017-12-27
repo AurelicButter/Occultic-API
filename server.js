@@ -7,12 +7,14 @@ var app = express();
 var errorLog = require('./errors.js');
 
 // IMPORT ALL DATABASE SCHEMAS //
-var character = require('./character/character.js');
+var character = require('./schemas/character.js');
+var anime = require('./schemas/anime.js');
+var episode = require('./schemas/episode.js');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({"extended": true}));
 
-router.get("/", function(req,res){ res.send("Hello World"); });
+router.get("/", function(req,res) { res.send("Hello World"); });
 
 // API ROUTES //
 router.route("/character")
@@ -45,7 +47,7 @@ router.route("/character")
             if (res.statusCode !== 200) { return res.send(errorLog(err, res.statusCode, "Error in adding data")); }
             else { return res.send("Data added successfully!"); }
         });
-    })
+    });
     
 router.route('/character/:DBid')
     .get(function(req, res) {
@@ -92,6 +94,41 @@ router.route('/character/:DBid')
                     else { res.send("Data tied with the id of " + req.params.DBid + " has been removed."); }
                 });
             }
+        });
+    });
+
+router.route("/media")
+    .get(function(req, res) {
+        anime.find({}, function(err, data){
+            if (res.statusCode !== 200) { return res.send(errorLog(err, res.statusCode, "Error in fetching data")); }
+            else if (data === null) { return res.send(errorLog(err, 404, "Data not found")); }
+            else { res.json(data); }
+        });
+    })
+
+    .post(function(req, res) {
+        var db = new anime();
+        db.DBid = req.body.DBid,
+        db.dates.start = req.body.dates.start,
+        db.dates.end = req.body.dates.end,
+        db.title.en = req.body.title.en,
+        db.title.ja = req.body.title.ja,
+        db.description = req.body.description,
+        db.episode_count = req.body.episode_count,
+        db.producers = req.body.producers,
+        db.licensor = req.body.licensor,
+        db.studio = req.body.studio,
+        db.source = req.body.source,
+        db.genre = req.body.genre,
+        db.rating = req.body.rating,
+        db.episode_duration = req.body.episode_duration,
+        db.music.opening = req.body.music.opening,
+        db.music.ending = req.body.music.ending,
+        db.staff = req.body.staff
+
+        db.save(function(err) {
+            if (res.statusCode !== 200) { return res.send(errorLog(err, res.statusCode, "Error in adding data")); }
+            else { return res.send("Data added successfully!"); }
         });
     });
 
