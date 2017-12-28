@@ -1,6 +1,6 @@
 {
   "name": "occultic-api",
-  "version": "0.0.1",
+  "version": "0.0.9",
   "description": "An API built in Node to bring data about Occultic;Nine",
   "main": "server.js",
   "scripts": {

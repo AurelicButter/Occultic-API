@@ -1,8 +1,7 @@
 const mongoose = require('mongoose'); 
-mongoose.connect('mongodb://localhost:27017/MongoDB');
 
 var episodeSchema = new mongoose.Schema({  
-  id: Number,
+  DBid: Number,
   episode_number: Number,
   aired_date: String,
   title: {
